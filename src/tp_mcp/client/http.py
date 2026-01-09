@@ -8,7 +8,7 @@ from typing import Any
 
 import httpx
 
-from tp_mcp.auth import clear_credential, get_credential
+from tp_mcp.auth import get_credential
 
 TP_API_BASE = "https://tpapi.trainingpeaks.com"
 DEFAULT_TIMEOUT = 30.0
@@ -209,12 +209,11 @@ class TPClient:
                 return APIResponse(success=True, data=None)
 
         if response.status_code == 401:
-            # Clear stored credential on 401
-            clear_credential()
+            # Don't auto-clear - could be temporary. User can run 'tp-mcp auth-clear' if needed.
             return APIResponse(
                 success=False,
                 error_code=ErrorCode.AUTH_EXPIRED,
-                message="Session expired. Run 'tp-mcp auth' to re-authenticate.",
+                message="Session expired or invalid. Run 'tp-mcp auth' to re-authenticate.",
             )
 
         if response.status_code == 403:
