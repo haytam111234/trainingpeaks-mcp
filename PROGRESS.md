@@ -35,15 +35,15 @@ MVP - Complete & Tested
 - [x] SERVER-02 - Python 3.14 async fix
 
 ### Testing & Docs (MVP)
-- [x] TEST-01 - Integration test suite (30 tests passing)
+- [x] TEST-01 - Integration test suite (44 tests passing)
+- [x] TEST-02 - Tests for fitness/peaks tools
+- [x] CI-01 - GitHub Actions workflow (Python 3.10-3.12)
 - [x] DOCS-01 - README with SEO optimization
 - [x] DOCS-02 - MIT License
 
 ### Future (V1)
 - [ ] TOOL-08 - tp_create_workout
 - [ ] TOOL-09 - tp_move_workout
-- [ ] TEST-02 - Tests for fitness/peaks tools
-- [ ] CI-01 - GitHub Actions workflow
 
 ## API Endpoint Reference
 

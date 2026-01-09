@@ -76,6 +76,36 @@ class TestTpGetWorkouts:
         assert result["isError"] is True
         assert result["error_code"] == "VALIDATION_ERROR"
 
+    @pytest.mark.asyncio
+    async def test_get_workouts_date_range_too_large(self):
+        """Test with date range exceeding 90 days."""
+        result = await tp_get_workouts("2025-01-01", "2025-06-01")
+
+        assert result["isError"] is True
+        assert result["error_code"] == "VALIDATION_ERROR"
+        assert "90 days" in result["message"]
+
+    @pytest.mark.asyncio
+    async def test_get_workouts_date_range_at_limit(self, mock_api_responses):
+        """Test with date range exactly at 90 days."""
+        user_response = APIResponse(
+            success=True, data={"user": {"personId": 123}}
+        )
+        workouts_response = APIResponse(success=True, data=[])
+
+        with patch("tp_mcp.tools.workouts.TPClient") as mock_client:
+            mock_instance = AsyncMock()
+            mock_instance.get = AsyncMock(
+                side_effect=[user_response, workouts_response]
+            )
+            mock_instance.athlete_id = None
+            mock_client.return_value.__aenter__.return_value = mock_instance
+
+            # 90 days exactly should work
+            result = await tp_get_workouts("2025-01-01", "2025-04-01")
+
+        assert "isError" not in result or not result.get("isError")
+
 
 class TestTpGetWorkout:
     """Tests for tp_get_workout tool."""
