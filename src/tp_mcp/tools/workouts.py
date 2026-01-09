@@ -61,6 +61,15 @@ async def tp_get_workouts(
             "message": "start_date must be before or equal to end_date",
         }
 
+    # Limit date range to prevent massive queries
+    max_days = 90
+    if (end - start).days > max_days:
+        return {
+            "isError": True,
+            "error_code": "VALIDATION_ERROR",
+            "message": f"Date range too large. Maximum {max_days} days. Use multiple smaller queries.",
+        }
+
     async with TPClient() as client:
         athlete_id = await _get_athlete_id(client)
         if not athlete_id:

@@ -58,17 +58,17 @@ TOOLS = [
     ),
     Tool(
         name="tp_get_workouts",
-        description="Get workouts for date range. Returns planned and completed.",
+        description="Get workouts for date range. Max 90 days. Use narrow ranges for specific dates.",
         inputSchema={
             "type": "object",
             "properties": {
                 "start_date": {
                     "type": "string",
-                    "description": "Start date (YYYY-MM-DD)",
+                    "description": "Start date (YYYY-MM-DD). Use exact dates, not broad ranges.",
                 },
                 "end_date": {
                     "type": "string",
-                    "description": "End date (YYYY-MM-DD)",
+                    "description": "End date (YYYY-MM-DD). Use exact dates, not broad ranges.",
                 },
                 "type": {
                     "type": "string",
