@@ -44,6 +44,7 @@ MVP - Complete & Tested
 ### Future (V1)
 - [ ] TOOL-08 - tp_create_workout
 - [ ] TOOL-09 - tp_move_workout
+- [ ] TOOL-10 - tp_get_health_metrics (sleep, resting HR, HRV, weight)
 
 ## API Endpoint Reference
 
