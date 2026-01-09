@@ -24,57 +24,84 @@ Ask your AI assistant questions like:
 | `tp_get_fitness` | Track CTL, ATL, and TSB (fitness, fatigue, form) |
 | `tp_get_workout_prs` | See personal records set in a specific session |
 
-## Quick Start
+---
+
+## Setup Options
+
+### Option A: Auto-Setup with Claude Code
+
+If you have [Claude Code](https://claude.ai/code), paste this prompt:
+
+> Set up the TrainingPeaks MCP server from https://github.com/JamsusMaximus/trainingpeaks-mcp - clone it, create a venv, install it, then walk me through getting my TrainingPeaks cookie from my browser and run tp-mcp auth. Finally, add it to my Claude Desktop config.
+
+Claude will handle the installation and guide you through authentication step-by-step.
+
+### Option B: Manual Setup
+
+#### Step 1: Install
 
 ```bash
-# Clone and install
 git clone https://github.com/JamsusMaximus/trainingpeaks-mcp.git
 cd trainingpeaks-mcp
 python3 -m venv .venv
-source .venv/bin/activate
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install -e .
+```
 
-# Authenticate (one-time setup)
+#### Step 2: Get Your TrainingPeaks Cookie
+
+TrainingPeaks doesn't have a public API, so we use session cookie authentication.
+
+1. **Log into TrainingPeaks** at [trainingpeaks.com](https://www.trainingpeaks.com)
+
+2. **Open browser DevTools**
+   - Mac: `Cmd + Option + I`
+   - Windows/Linux: `F12`
+
+3. **Navigate to cookies**
+   - Chrome/Edge: **Application** tab → **Cookies** → `https://www.trainingpeaks.com`
+   - Firefox: **Storage** tab → **Cookies** → `https://www.trainingpeaks.com`
+   - Safari: **Storage** tab → **Cookies** (enable DevTools in Preferences → Advanced first)
+
+4. **Find and copy `Production_tpAuth`**
+   - Look for a cookie named `Production_tpAuth`
+   - Double-click the **Value** column to select it
+   - Copy (`Cmd+C` / `Ctrl+C`)
+
+#### Step 3: Store Your Cookie
+
+```bash
 tp-mcp auth
 ```
 
-## Authentication
+Paste your cookie when prompted. It will be validated and stored securely in your system keyring.
 
-TrainingPeaks doesn't have a public API. This server uses session cookie authentication (same approach as tp2intervals and similar tools).
-
-### Getting Your Cookie
-
-1. Log into [TrainingPeaks](https://www.trainingpeaks.com)
-2. Open DevTools (`Cmd+Option+I` on Mac, `F12` on Windows)
-3. Go to **Application** → **Cookies** → `trainingpeaks.com`
-4. Copy the value of `Production_tpAuth`
-
-### Store It
-
+**Other auth commands:**
 ```bash
-tp-mcp auth        # Paste cookie, validates and stores securely
-tp-mcp auth-status # Check if authenticated
-tp-mcp auth-clear  # Remove stored credentials
+tp-mcp auth-status  # Check if authenticated
+tp-mcp auth-clear   # Remove stored credentials
 ```
 
-Credentials are stored in your system keyring (macOS Keychain, Windows Credential Locker, Linux Secret Service).
+#### Step 4: Add to Claude Desktop
 
-## Claude Desktop Setup
-
-Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
+Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows):
 
 ```json
 {
   "mcpServers": {
     "trainingpeaks": {
-      "command": "/path/to/trainingpeaks-mcp/.venv/bin/tp-mcp",
+      "command": "/full/path/to/trainingpeaks-mcp/.venv/bin/tp-mcp",
       "args": ["serve"]
     }
   }
 }
 ```
 
-Restart Claude Desktop. The TrainingPeaks tools will be available immediately.
+> **Important:** Replace `/full/path/to/` with the actual path where you cloned the repo.
+
+Restart Claude Desktop. You're ready to go!
+
+---
 
 ## Tool Reference
 
@@ -131,6 +158,10 @@ Get PRs set during a specific workout.
 - stdio transport only (no network exposure)
 - Read-only access (no workout modifications)
 
+## Cookie Expiration
+
+TrainingPeaks cookies last several weeks. When expired, tools will return auth errors. Run `tp-mcp auth` again with a fresh cookie.
+
 ## Development
 
 ```bash
@@ -139,10 +170,6 @@ pytest tests/ -v
 mypy src/
 ruff check src/
 ```
-
-## Cookie Expiration
-
-TrainingPeaks cookies last several weeks. When expired, tools will return auth errors. Run `tp-mcp auth` again with a fresh cookie.
 
 ## License
 
