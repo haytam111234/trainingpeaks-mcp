@@ -2,7 +2,7 @@
 
 from typing import Any
 
-from tp_mcp.client import TPClient, parse_user_profile
+from tp_mcp.client import TPClient
 
 
 async def tp_get_profile() -> dict[str, Any]:
@@ -29,12 +29,25 @@ async def tp_get_profile() -> dict[str, Any]:
             }
 
         try:
-            profile = parse_user_profile(response.data)
+            # API returns nested structure: { user: { ... } }
+            user_data = response.data.get("user", response.data)
+
+            # Get athlete ID from athletes array or personId
+            athlete_id = user_data.get("personId")
+            if not athlete_id:
+                athletes = user_data.get("athletes", [])
+                if athletes:
+                    athlete_id = athletes[0].get("athleteId")
+
+            # Check if premium
+            is_premium = user_data.get("settings", {}).get("account", {}).get("isPremium", False)
+            account_type = "premium" if is_premium else "basic"
+
             return {
-                "athlete_id": profile.athlete_id,
-                "name": profile.name,
-                "email": profile.email,
-                "account_type": profile.account_type,
+                "athlete_id": athlete_id,
+                "name": user_data.get("fullName") or f"{user_data.get('firstName', '')} {user_data.get('lastName', '')}".strip(),
+                "email": user_data.get("email"),
+                "account_type": account_type,
             }
         except Exception as e:
             return {

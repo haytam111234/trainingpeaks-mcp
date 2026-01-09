@@ -38,15 +38,15 @@ class WorkoutSummary(BaseModel):
     id: int = Field(alias="workoutId")
     workout_date: date_type = Field(alias="workoutDay")
     title: str | None = None
-    workout_type: str | None = Field(default=None, alias="workoutTypeValueId")
+    workout_type: str | int | None = Field(default=None, alias="workoutTypeValueId")
     sport: str | None = Field(default=None, alias="workoutTypeFamilyId")
-    duration_planned: int | None = Field(default=None, alias="totalTimePlanned")
-    duration_actual: int | None = Field(default=None, alias="totalTime")
+    duration_planned: int | float | None = Field(default=None, alias="totalTimePlanned")
+    duration_actual: int | float | None = Field(default=None, alias="totalTime")
     tss_planned: float | None = Field(default=None, alias="tssPlanned")
     tss_actual: float | None = Field(default=None, alias="tssActual")
     distance_planned: float | None = Field(default=None, alias="distancePlanned")
     distance_actual: float | None = Field(default=None, alias="distance")
-    completed: bool = Field(default=False)
+    completed: bool | None = Field(default=None)
     description: str | None = None
 
     @property
@@ -57,7 +57,7 @@ class WorkoutSummary(BaseModel):
     @property
     def is_completed(self) -> bool:
         """Check if workout is completed."""
-        return self.completed or self.duration_actual is not None
+        return bool(self.completed) or self.duration_actual is not None
 
     @property
     def workout_status(self) -> str:
@@ -97,12 +97,12 @@ class WorkoutDetail(BaseModel):
     workout_date: date_type = Field(alias="workoutDay")
     title: str | None = None
     sport: str | None = Field(default=None, alias="workoutTypeFamilyId")
-    workout_type: str | None = Field(default=None, alias="workoutTypeValueId")
+    workout_type: str | int | None = Field(default=None, alias="workoutTypeValueId")
     description: str | None = None
     coach_comments: str | None = Field(default=None, alias="coachComments")
     athlete_comments: str | None = Field(default=None, alias="athleteComments")
-    duration_planned: int | None = Field(default=None, alias="totalTimePlanned")
-    duration_actual: int | None = Field(default=None, alias="totalTime")
+    duration_planned: int | float | None = Field(default=None, alias="totalTimePlanned")
+    duration_actual: int | float | None = Field(default=None, alias="totalTime")
     tss_planned: float | None = Field(default=None, alias="tssPlanned")
     tss_actual: float | None = Field(default=None, alias="tssActual")
     if_planned: float | None = Field(default=None, alias="ifPlanned")
@@ -115,7 +115,7 @@ class WorkoutDetail(BaseModel):
     avg_hr: int | None = Field(default=None, alias="heartRateAverage")
     avg_cadence: float | None = Field(default=None, alias="cadenceAverage")
     elevation_gain: float | None = Field(default=None, alias="elevationGain")
-    completed: bool = Field(default=False)
+    completed: bool | None = Field(default=None)
 
     @property
     def date(self) -> date_type:

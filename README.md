@@ -32,11 +32,13 @@ TrainingPeaks doesn't offer a public API. This server uses session cookie authen
 ### Getting Your Cookie
 
 1. Log into [TrainingPeaks](https://www.trainingpeaks.com) in your browser
-2. Open DevTools (F12) → Network tab
-3. Navigate to any page on trainingpeaks.com
-4. Find a request to `tpapi.trainingpeaks.com`
-5. In the request headers, find the `Cookie` header
-6. Copy the value of the `Production_tpAuth` cookie
+2. Open DevTools:
+   - **Chrome/Edge:** `Cmd+Option+I` (Mac) or `F12` (Windows)
+   - **Safari:** `Cmd+Option+I` (enable in Preferences → Advanced → Show Developer menu first)
+3. Click the **Application** tab (Chrome/Edge) or **Storage** tab (Safari)
+4. In the left sidebar, expand **Cookies** → click `https://www.trainingpeaks.com`
+5. Find the cookie named `Production_tpAuth` in the list
+6. Double-click the **Value** to select it, then copy (`Cmd+C`)
 
 ### Storing Your Cookie
 

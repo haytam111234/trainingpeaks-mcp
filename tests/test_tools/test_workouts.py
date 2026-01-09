@@ -15,7 +15,7 @@ class TestTpGetWorkouts:
     async def test_get_workouts_success(self, mock_api_responses):
         """Test successful workout retrieval."""
         user_response = APIResponse(
-            success=True, data={"athleteId": 123}
+            success=True, data={"user": {"personId": 123}}
         )
         workouts_response = APIResponse(
             success=True, data=mock_api_responses["workouts"]
@@ -39,7 +39,7 @@ class TestTpGetWorkouts:
     async def test_get_workouts_filter_completed(self, mock_api_responses):
         """Test filtering for completed workouts only."""
         user_response = APIResponse(
-            success=True, data={"athleteId": 123}
+            success=True, data={"user": {"personId": 123}}
         )
         workouts_response = APIResponse(
             success=True, data=mock_api_responses["workouts"]
@@ -84,7 +84,7 @@ class TestTpGetWorkout:
     async def test_get_workout_success(self, mock_api_responses):
         """Test successful single workout retrieval."""
         user_response = APIResponse(
-            success=True, data={"athleteId": 123}
+            success=True, data={"user": {"personId": 123}}
         )
         workout_response = APIResponse(
             success=True, data=mock_api_responses["workout_detail"]
@@ -109,7 +109,7 @@ class TestTpGetWorkout:
     async def test_get_workout_not_found(self):
         """Test workout not found."""
         user_response = APIResponse(
-            success=True, data={"athleteId": 123}
+            success=True, data={"user": {"personId": 123}}
         )
         workout_response = APIResponse(
             success=False,
