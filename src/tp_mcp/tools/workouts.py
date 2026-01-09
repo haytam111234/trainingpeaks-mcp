@@ -148,7 +148,7 @@ async def tp_get_workout(workout_id: str) -> dict[str, Any]:
                 "message": "Could not get athlete ID. Re-authenticate.",
             }
 
-        endpoint = f"/fitness/v1/athletes/{athlete_id}/workouts/{workout_id}"
+        endpoint = f"/fitness/v6/athletes/{athlete_id}/workouts/{workout_id}"
         response = await client.get(endpoint)
 
         if response.is_error:

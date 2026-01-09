@@ -57,16 +57,16 @@ None
 - Using property aliases for backwards compatibility
 
 ## API Endpoint Discoveries
-Based on PRD and tp2intervals patterns:
+Verified against live TrainingPeaks API (2025-01-09):
 - /users/v3/token - Auth validation
-- /users/v3/user - User profile
+- /users/v3/user - User profile (returns nested: `{ user: { personId, ... } }`)
 - /fitness/v6/athletes/{id}/workouts/{start}/{end} - Workout list
-- /fitness/v1/athletes/{id}/workouts/{workoutId} - Single workout
-- /fitness/v3/athletes/{id}/powerpeaks - Power peaks
-- /fitness/v3/athletes/{id}/pacepeaks - Pace peaks
+- /fitness/v6/athletes/{id}/workouts/{workoutId} - Single workout (v6 not v1!)
+- /fitness/v3/athletes/{id}/powerpeaks - Power peaks (returns 404 - needs investigation)
+- /fitness/v3/athletes/{id}/pacepeaks - Pace peaks (returns 404 - needs investigation)
 
 ## Known Issues
-None currently
+- Peaks endpoints (/powerpeaks, /pacepeaks) return 404 - may require different API version or parameters
 
 ## Session Notes
 MVP implementation complete. Ready for human testing with a real TrainingPeaks account.
