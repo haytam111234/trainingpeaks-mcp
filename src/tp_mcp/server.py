@@ -13,7 +13,7 @@ from mcp.types import (
     Tool,
 )
 
-from tp_mcp.auth import get_credential, validate_auth_sync
+from tp_mcp.auth import get_credential, validate_auth
 from tp_mcp.tools import (
     tp_auth_status,
     tp_get_fitness,
@@ -218,7 +218,7 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
         return [TextContent(type="text", text=json.dumps(error_result, indent=2))]
 
 
-def _validate_auth_on_startup() -> bool:
+async def _validate_auth_on_startup() -> bool:
     """Validate authentication on server startup.
 
     Returns:
@@ -229,7 +229,7 @@ def _validate_auth_on_startup() -> bool:
         logger.warning("No credential stored. Run 'tp-mcp auth' to authenticate.")
         return False
 
-    result = validate_auth_sync(cred.cookie)
+    result = await validate_auth(cred.cookie)
     if result.is_valid:
         logger.info(f"Authenticated as {result.email} (athlete_id: {result.athlete_id})")
         return True
@@ -243,7 +243,7 @@ async def run_server_async() -> None:
     logger.info("Starting TrainingPeaks MCP Server")
 
     # Validate auth on startup (warning only, don't block)
-    _validate_auth_on_startup()
+    await _validate_auth_on_startup()
 
     # Run the server with stdio transport
     async with stdio_server() as (read_stream, write_stream):
