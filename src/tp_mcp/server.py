@@ -36,11 +36,11 @@ logger = logging.getLogger("tp-mcp")
 server = Server("trainingpeaks-mcp")
 
 
-# Define tools with terse descriptions (under 50 tokens as per PRD)
+# Tool descriptions: concise but guide LLM to efficient usage
 TOOLS = [
     Tool(
         name="tp_auth_status",
-        description="Check auth status. Use when other tools return auth errors.",
+        description="Check auth status. Use only when other tools return auth errors.",
         inputSchema={
             "type": "object",
             "properties": {},
@@ -49,7 +49,7 @@ TOOLS = [
     ),
     Tool(
         name="tp_get_profile",
-        description="Get athlete profile and ID.",
+        description="Get athlete profile. Rarely needed - other tools work without it.",
         inputSchema={
             "type": "object",
             "properties": {},
@@ -58,22 +58,22 @@ TOOLS = [
     ),
     Tool(
         name="tp_get_workouts",
-        description="Get workouts for date range. Max 90 days. Use narrow ranges for specific dates.",
+        description="List workouts in date range. Query ONLY the specific days needed (e.g., 2026-01-07 to 2026-01-08 for 2 days). Max 90 days.",
         inputSchema={
             "type": "object",
             "properties": {
                 "start_date": {
                     "type": "string",
-                    "description": "Start date (YYYY-MM-DD). Use exact dates, not broad ranges.",
+                    "description": "YYYY-MM-DD. Be precise - query only days you need.",
                 },
                 "end_date": {
                     "type": "string",
-                    "description": "End date (YYYY-MM-DD). Use exact dates, not broad ranges.",
+                    "description": "YYYY-MM-DD. Be precise - query only days you need.",
                 },
                 "type": {
                     "type": "string",
                     "enum": ["all", "planned", "completed"],
-                    "description": "Filter by type",
+                    "description": "Filter: all, planned, or completed",
                     "default": "all",
                 },
             },
@@ -82,13 +82,13 @@ TOOLS = [
     ),
     Tool(
         name="tp_get_workout",
-        description="Get full workout details including metrics.",
+        description="Get single workout details by ID. Use after tp_get_workouts to drill into one workout.",
         inputSchema={
             "type": "object",
             "properties": {
                 "workout_id": {
                     "type": "string",
-                    "description": "Workout ID",
+                    "description": "Workout ID from tp_get_workouts",
                 },
             },
             "required": ["workout_id"],
@@ -96,13 +96,13 @@ TOOLS = [
     ),
     Tool(
         name="tp_get_workout_prs",
-        description="Get personal records set during a specific workout.",
+        description="Get PRs from one workout. Use after tp_get_workouts to see records set in that session.",
         inputSchema={
             "type": "object",
             "properties": {
                 "workout_id": {
                     "type": "string",
-                    "description": "Workout ID to get PRs for",
+                    "description": "Workout ID from tp_get_workouts",
                 },
             },
             "required": ["workout_id"],
@@ -110,22 +110,22 @@ TOOLS = [
     ),
     Tool(
         name="tp_get_peaks",
-        description="Get ranked personal records by sport and type.",
+        description="Get top performances by type. For comparing PRs across time, not single workouts.",
         inputSchema={
             "type": "object",
             "properties": {
                 "sport": {
                     "type": "string",
                     "enum": ["Bike", "Run"],
-                    "description": "Sport type",
+                    "description": "Bike or Run",
                 },
                 "pr_type": {
                     "type": "string",
-                    "description": "PR type: power5sec, power20min, speed5K, etc.",
+                    "description": "Bike: power1min, power5min, power20min. Run: speed5K, speed10K, speedHalfMarathon",
                 },
                 "days": {
                     "type": "integer",
-                    "description": "Days of history (default 365)",
+                    "description": "Lookback days. Use 365 for annual, 90 for recent.",
                     "default": 365,
                 },
             },
@@ -134,13 +134,13 @@ TOOLS = [
     ),
     Tool(
         name="tp_get_fitness",
-        description="Get CTL/ATL/TSB fitness and fatigue data.",
+        description="Get fitness/fatigue trend (CTL/ATL/TSB). Returns daily values - use 14-30 days for recent trend, 90 for full picture.",
         inputSchema={
             "type": "object",
             "properties": {
                 "days": {
                     "type": "integer",
-                    "description": "Days of history (default 90)",
+                    "description": "Days of history. Smaller = less data. Default 90.",
                     "default": 90,
                 },
             },
