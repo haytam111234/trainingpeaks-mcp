@@ -13,10 +13,11 @@ Connect TrainingPeaks to Claude and other AI assistants via the Model Context Pr
 ![Example conversation with Claude using TrainingPeaks MCP](screenshot.png)
 
 Ask your AI assistant questions like:
-- "What workouts did I do last week?"
-- "Compare my 20-minute power from this year vs last year"
-- "How is my fitness trending? Am I ready to race?"
-- "Show me the PRs I set in yesterday's ride"
+- "Compare my FTP progression this year vs last year"
+- "What was my TSS ramp rate in the 6 weeks before my best 20-min power?"
+- "Am I ready to race? Show my form trend and recent workout quality"
+- "Which days of the week do I typically train hardest?"
+- "Find weeks where I exceeded 800 TSS and show what happened to my form after"
 
 ## Features
 
