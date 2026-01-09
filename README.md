@@ -6,7 +6,7 @@
 
 Connect TrainingPeaks to Claude and other AI assistants via the Model Context Protocol (MCP). Query your workouts, analyze training load, compare power data, and track fitness trends through natural conversation.
 
-**No API approval required.** The official Training Peaks API is approval-gated, but this server uses secure cookie authentication that any user can set up in minutes. Your credentials are stored in your system keyring, never transmitted anywhere except to TrainingPeaks.
+**No API approval required.** The official Training Peaks API is approval-gated, but this server uses secure cookie authentication that any user can set up in minutes. Your cookie is stored in your system keyring, never transmitted anywhere except to TrainingPeaks.
 
 ## What You Can Do
 
@@ -86,7 +86,7 @@ Paste your cookie when prompted. It will be validated and stored securely in you
 **Other auth commands:**
 ```bash
 tp-mcp auth-status  # Check if authenticated
-tp-mcp auth-clear   # Remove stored credentials
+tp-mcp auth-clear   # Remove stored cookie
 ```
 
 #### Step 4: Add to Claude Desktop
@@ -167,9 +167,9 @@ Get PRs set during a specific workout.
 
 ## Security
 
-- Credentials stored in system keyring (not plaintext)
+- Cookie stored in system keyring (not plaintext)
 - Encrypted file fallback for headless environments
-- No credentials in logs or error messages
+- No cookie values in logs or error messages
 - stdio transport only (no network exposure)
 - Read-only access (no workout modifications)
 
