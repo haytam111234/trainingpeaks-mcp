@@ -94,33 +94,16 @@ TOOLS = [
     ),
     Tool(
         name="tp_get_peaks",
-        description="Get power or pace peak data.",
+        description="Get personal records (power/HR peaks) for a workout.",
         inputSchema={
             "type": "object",
             "properties": {
-                "peak_type": {
+                "workout_id": {
                     "type": "string",
-                    "enum": ["power", "pace"],
-                    "description": "Type of peak",
-                },
-                "sport": {
-                    "type": "string",
-                    "enum": ["bike", "run"],
-                    "description": "Sport type",
-                },
-                "duration": {
-                    "type": "string",
-                    "enum": ["5s", "1m", "5m", "20m", "60m", "all"],
-                    "description": "Peak duration",
-                    "default": "all",
-                },
-                "days": {
-                    "type": "integer",
-                    "description": "Days of history (1-365)",
-                    "default": 90,
+                    "description": "Workout ID to get PRs for",
                 },
             },
-            "required": ["peak_type", "sport"],
+            "required": ["workout_id"],
         },
     ),
 ]
@@ -160,10 +143,7 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
 
         elif name == "tp_get_peaks":
             result = await tp_get_peaks(
-                peak_type=arguments["peak_type"],
-                sport=arguments["sport"],
-                duration=arguments.get("duration", "all"),
-                days=arguments.get("days", 90),
+                workout_id=arguments["workout_id"],
             )
 
         else:

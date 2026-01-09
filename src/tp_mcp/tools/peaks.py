@@ -1,7 +1,6 @@
-"""TOOL-05: tp_get_peaks - Get power or pace peak data."""
+"""TOOL-05: tp_get_peaks - Get personal records/peaks for a workout."""
 
-from datetime import date, timedelta
-from typing import Any, Literal
+from typing import Any
 
 from tp_mcp.client import TPClient
 
@@ -28,56 +27,15 @@ async def _get_athlete_id(client: TPClient) -> int | None:
     return None
 
 
-# Map duration strings to seconds
-DURATION_MAP = {
-    "5s": 5,
-    "10s": 10,
-    "30s": 30,
-    "1m": 60,
-    "2m": 120,
-    "5m": 300,
-    "10m": 600,
-    "20m": 1200,
-    "30m": 1800,
-    "60m": 3600,
-    "90m": 5400,
-}
-
-
-def _seconds_to_duration(seconds: int) -> str:
-    """Convert seconds to duration string."""
-    if seconds < 60:
-        return f"{seconds}s"
-    if seconds < 3600:
-        return f"{seconds // 60}m"
-    return f"{seconds // 3600}h"
-
-
-async def tp_get_peaks(
-    peak_type: Literal["power", "pace"],
-    sport: Literal["bike", "run"],
-    duration: Literal["5s", "1m", "5m", "20m", "60m", "all"] = "all",
-    days: int = 90,
-) -> dict[str, Any]:
-    """Get power or pace peak data.
+async def tp_get_peaks(workout_id: str) -> dict[str, Any]:
+    """Get personal records (peaks) for a specific workout.
 
     Args:
-        peak_type: Type of peak - "power" or "pace".
-        sport: Sport type - "bike" or "run".
-        duration: Specific duration or "all" for all durations.
-        days: Number of days of history to include (default 90).
+        workout_id: The workout ID to get PRs for.
 
     Returns:
-        Dict with peaks list, sport, peak_type, and days.
+        Dict with personal records including power and heart rate peaks.
     """
-    # Validate days
-    if days < 1 or days > 365:
-        return {
-            "isError": True,
-            "error_code": "VALIDATION_ERROR",
-            "message": "days must be between 1 and 365",
-        }
-
     async with TPClient() as client:
         athlete_id = await _get_athlete_id(client)
         if not athlete_id:
@@ -87,20 +45,8 @@ async def tp_get_peaks(
                 "message": "Could not get athlete ID. Re-authenticate.",
             }
 
-        # Calculate date range
-        end_date = date.today()
-        start_date = end_date - timedelta(days=days)
-
-        # Build endpoint based on peak type
-        if peak_type == "power":
-            endpoint = f"/fitness/v3/athletes/{athlete_id}/powerpeaks"
-        else:
-            endpoint = f"/fitness/v3/athletes/{athlete_id}/pacepeaks"
-
-        params = {
-            "startDate": start_date.isoformat(),
-            "endDate": end_date.isoformat(),
-        }
+        endpoint = f"/personalrecord/v2/athletes/{athlete_id}/workouts/{workout_id}"
+        params = {"displayPeaksForBasic": "true"}
 
         response = await client.get(endpoint, params=params)
 
@@ -113,54 +59,53 @@ async def tp_get_peaks(
 
         if not response.data:
             return {
-                "peaks": [],
-                "sport": sport,
-                "peak_type": peak_type,
-                "days": days,
+                "workout_id": workout_id,
+                "personal_record_count": 0,
+                "records": [],
             }
 
         try:
-            # Parse peaks from response
-            # The API returns peaks in various formats, so we normalize here
-            peaks_data = response.data if isinstance(response.data, list) else []
+            data = response.data
+            records = data.get("personalRecords", [])
 
-            peaks = []
-            for peak in peaks_data:
-                # Filter by sport if applicable
-                peak_sport = peak.get("workoutTypeFamilyId", "").lower()
-                if sport == "bike" and "bike" not in peak_sport and "cycling" not in peak_sport:
-                    continue
-                if sport == "run" and "run" not in peak_sport:
-                    continue
+            # Group records by class (Power, HeartRate, etc.)
+            power_records = []
+            hr_records = []
+            other_records = []
 
-                duration_seconds = peak.get("durationSeconds", 0)
-                duration_str = _seconds_to_duration(duration_seconds)
+            for record in records:
+                pr_class = record.get("class", "")
+                pr_type = record.get("type", "")
+                timeframe = record.get("timeFrame", {})
 
-                # Filter by requested duration
-                if duration != "all" and duration_str != duration:
-                    continue
+                formatted = {
+                    "type": pr_type,
+                    "value": record.get("value"),
+                    "rank": record.get("rank"),
+                    "timeframe": timeframe.get("name", ""),
+                    "timeframe_start": timeframe.get("startDate", "").split("T")[0],
+                    "timeframe_end": timeframe.get("endDate", "").split("T")[0],
+                }
 
-                peaks.append({
-                    "duration": duration_str,
-                    "duration_seconds": duration_seconds,
-                    "value": peak.get("value"),
-                    "date": peak.get("activityDate", "").split("T")[0],
-                    "activity_id": peak.get("activityId"),
-                })
-
-            # Sort by duration
-            peaks.sort(key=lambda x: x["duration_seconds"])
+                if pr_class == "Power":
+                    power_records.append(formatted)
+                elif pr_class == "HeartRate":
+                    hr_records.append(formatted)
+                else:
+                    formatted["class"] = pr_class
+                    other_records.append(formatted)
 
             return {
-                "peaks": peaks,
-                "sport": sport,
-                "peak_type": peak_type,
-                "days": days,
+                "workout_id": workout_id,
+                "personal_record_count": data.get("personalRecordCount", len(records)),
+                "power_records": power_records,
+                "heart_rate_records": hr_records,
+                "other_records": other_records if other_records else None,
             }
 
         except Exception as e:
             return {
                 "isError": True,
                 "error_code": "API_ERROR",
-                "message": f"Failed to parse peaks: {e}",
+                "message": f"Failed to parse personal records: {e}",
             }

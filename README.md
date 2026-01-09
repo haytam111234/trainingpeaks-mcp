@@ -100,13 +100,12 @@ Parameters:
 - `workout_id`: Workout ID
 
 ### tp_get_peaks
-Get power or pace peak data.
+Get personal records (power and HR peaks) for a specific workout.
 
 Parameters:
-- `peak_type`: "power" or "pace"
-- `sport`: "bike" or "run"
-- `duration`: "5s", "1m", "5m", "20m", "60m", or "all" (default: "all")
-- `days`: Days of history, 1-365 (default: 90)
+- `workout_id`: Workout ID to get PRs for
+
+Returns power records (5s, 1m, 5m, 10m, 20m) and heart rate records with rank and timeframe.
 
 ## Security
 

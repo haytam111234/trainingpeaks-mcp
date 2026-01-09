@@ -57,26 +57,18 @@ None
 - Using property aliases for backwards compatibility
 
 ## API Endpoint Discoveries
-Verified against live TrainingPeaks API (2025-01-09):
+Verified against live TrainingPeaks API (2026-01-09):
 - /users/v3/token - Auth validation
 - /users/v3/user - User profile (returns nested: `{ user: { personId, ... } }`)
 - /fitness/v6/athletes/{id}/workouts/{start}/{end} - Workout list
 - /fitness/v6/athletes/{id}/workouts/{workoutId} - Single workout (v6 not v1!)
-- /fitness/v3/athletes/{id}/powerpeaks - Power peaks (returns 404 - needs investigation)
-- /fitness/v3/athletes/{id}/pacepeaks - Pace peaks (returns 404 - needs investigation)
+- /personalrecord/v2/athletes/{id}/workouts/{workoutId}?displayPeaksForBasic=true - Personal records per workout!
+- /fitness/v3/athletes/{id}/powerpeaks - DEPRECATED (returns 404)
+- /fitness/v3/athletes/{id}/pacepeaks - DEPRECATED (returns 404)
 
 ## Known Issues
-- Peaks endpoints (/powerpeaks, /pacepeaks) return 404 - needs network traffic analysis
-  - Tried: v1, v3, v5, v6, v7 API versions
-  - Tried: Various date param formats, sport type filters, include/expand params
-  - Tried: /peaks, /personalrecords, /powercurve, /meanmax endpoints
-  - Workout data shows `personalRecordCount` but no details
-  - Next step: Capture browser network traffic to find actual endpoints
-
-## Network Analysis TODO
-- [ ] Capture traffic when viewing peaks chart in TrainingPeaks web app
-- [ ] Capture traffic when viewing personal records
-- [ ] Document actual endpoint paths and required parameters
+- Old peaks endpoints (/powerpeaks, /pacepeaks) deprecated - use /personalrecord/v2/ instead
+- RESOLVED: Found correct endpoint via network traffic analysis (2026-01-09)
 
 ## Session Notes
 MVP implementation complete. Ready for human testing with a real TrainingPeaks account.
