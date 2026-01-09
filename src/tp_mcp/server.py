@@ -125,8 +125,8 @@ TOOLS = [
                 },
                 "days": {
                     "type": "integer",
-                    "description": "Lookback days. Use 365 for annual, 90 for recent.",
-                    "default": 365,
+                    "description": "Lookback days. Default 3650 (all-time). Use 365 for year, 90 for recent.",
+                    "default": 3650,
                 },
             },
             "required": ["sport", "pr_type"],
@@ -191,7 +191,7 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             result = await tp_get_peaks(
                 sport=arguments["sport"],
                 pr_type=arguments["pr_type"],
-                days=arguments.get("days", 365),
+                days=arguments.get("days", 3650),
             )
 
         elif name == "tp_get_fitness":

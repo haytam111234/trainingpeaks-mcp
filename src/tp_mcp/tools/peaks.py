@@ -40,14 +40,14 @@ RUN_PR_TYPES = [
 async def tp_get_peaks(
     sport: Literal["Bike", "Run"],
     pr_type: str,
-    days: int = 365,
+    days: int = 3650,
 ) -> dict[str, Any]:
     """Get personal records (peaks) for a sport and PR type.
 
     Args:
         sport: Sport type - "Bike" or "Run"
         pr_type: PR type - e.g., "power5sec", "power20min", "speed5K"
-        days: Days of history to query (default 365)
+        days: Days of history to query (default 3650 = ~10 years for all-time)
 
     Returns:
         Dict with ranked list of personal records.
