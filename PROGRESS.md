@@ -66,7 +66,17 @@ Verified against live TrainingPeaks API (2025-01-09):
 - /fitness/v3/athletes/{id}/pacepeaks - Pace peaks (returns 404 - needs investigation)
 
 ## Known Issues
-- Peaks endpoints (/powerpeaks, /pacepeaks) return 404 - may require different API version or parameters
+- Peaks endpoints (/powerpeaks, /pacepeaks) return 404 - needs network traffic analysis
+  - Tried: v1, v3, v5, v6, v7 API versions
+  - Tried: Various date param formats, sport type filters, include/expand params
+  - Tried: /peaks, /personalrecords, /powercurve, /meanmax endpoints
+  - Workout data shows `personalRecordCount` but no details
+  - Next step: Capture browser network traffic to find actual endpoints
+
+## Network Analysis TODO
+- [ ] Capture traffic when viewing peaks chart in TrainingPeaks web app
+- [ ] Capture traffic when viewing personal records
+- [ ] Document actual endpoint paths and required parameters
 
 ## Session Notes
 MVP implementation complete. Ready for human testing with a real TrainingPeaks account.
