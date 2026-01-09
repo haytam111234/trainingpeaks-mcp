@@ -125,7 +125,7 @@ TOOLS = [
                 },
                 "days": {
                     "type": "integer",
-                    "description": "Lookback days. Default 3650 (all-time). Use 365 for year, 90 for recent.",
+                    "description": "Lookback days. Default 3650 (all-time).",
                     "default": 3650,
                 },
             },
@@ -134,14 +134,22 @@ TOOLS = [
     ),
     Tool(
         name="tp_get_fitness",
-        description="Get fitness/fatigue trend (CTL/ATL/TSB). Default 90 days.",
+        description="Get fitness/fatigue trend (CTL/ATL/TSB). Supports historical date ranges.",
         inputSchema={
             "type": "object",
             "properties": {
                 "days": {
                     "type": "integer",
-                    "description": "Days of history. Smaller = less data. Default 90.",
+                    "description": "Days from today (default 90). Ignored if dates provided.",
                     "default": 90,
+                },
+                "start_date": {
+                    "type": "string",
+                    "description": "YYYY-MM-DD. For historical queries (e.g., 2022-01-01).",
+                },
+                "end_date": {
+                    "type": "string",
+                    "description": "YYYY-MM-DD. For historical queries (e.g., 2022-03-01).",
                 },
             },
             "required": [],
@@ -197,6 +205,8 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
         elif name == "tp_get_fitness":
             result = await tp_get_fitness(
                 days=arguments.get("days", 90),
+                start_date=arguments.get("start_date"),
+                end_date=arguments.get("end_date"),
             )
 
         else:

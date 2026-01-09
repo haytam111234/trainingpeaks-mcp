@@ -26,24 +26,50 @@ async def _get_athlete_id(client: TPClient) -> int | None:
 
 async def tp_get_fitness(
     days: int = 90,
+    start_date: str | None = None,
+    end_date: str | None = None,
     atl_constant: int = 7,
     ctl_constant: int = 42,
 ) -> dict[str, Any]:
     """Get fitness/fatigue/form data (CTL/ATL/TSB).
 
     Args:
-        days: Days of history to query (default 90)
+        days: Days of history (default 90). Ignored if start_date/end_date provided.
+        start_date: Optional start date (YYYY-MM-DD) for historical queries.
+        end_date: Optional end date (YYYY-MM-DD) for historical queries.
         atl_constant: ATL decay constant in days (default 7)
         ctl_constant: CTL decay constant in days (default 42)
 
     Returns:
         Dict with daily CTL, ATL, TSB values and current fitness summary.
     """
-    if days < 1 or days > 365:
+    # Parse dates if provided, otherwise use days from today
+    try:
+        if start_date and end_date:
+            query_start = date.fromisoformat(start_date)
+            query_end = date.fromisoformat(end_date)
+            if query_start > query_end:
+                return {
+                    "isError": True,
+                    "error_code": "VALIDATION_ERROR",
+                    "message": "start_date must be before end_date",
+                }
+            query_days = (query_end - query_start).days
+        else:
+            if days < 1 or days > 365:
+                return {
+                    "isError": True,
+                    "error_code": "VALIDATION_ERROR",
+                    "message": "days must be between 1 and 365",
+                }
+            query_end = date.today()
+            query_start = query_end - timedelta(days=days)
+            query_days = days
+    except ValueError as e:
         return {
             "isError": True,
             "error_code": "VALIDATION_ERROR",
-            "message": "days must be between 1 and 365",
+            "message": f"Invalid date format. Use YYYY-MM-DD. Error: {e}",
         }
 
     async with TPClient() as client:
@@ -55,11 +81,8 @@ async def tp_get_fitness(
                 "message": "Could not get athlete ID. Re-authenticate.",
             }
 
-        end_date = date.today()
-        start_date = end_date - timedelta(days=days)
-
         base = f"/fitness/v1/athletes/{athlete_id}/reporting/performancedata"
-        endpoint = f"{base}/{start_date}/{end_date}"
+        endpoint = f"{base}/{query_start}/{query_end}"
         body = {
             "atlConstant": atl_constant,
             "atlStart": 0,
@@ -79,7 +102,9 @@ async def tp_get_fitness(
 
         if not response.data:
             return {
-                "days": days,
+                "start_date": str(query_start),
+                "end_date": str(query_end),
+                "days": query_days,
                 "data": [],
                 "current": None,
             }
@@ -110,7 +135,9 @@ async def tp_get_fitness(
                 }
 
             return {
-                "days": days,
+                "start_date": str(query_start),
+                "end_date": str(query_end),
+                "days": query_days,
                 "current": current,
                 "daily_data": daily_data,
             }
