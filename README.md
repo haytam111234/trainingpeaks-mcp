@@ -1,5 +1,7 @@
 # 🎉 trainingpeaks-mcp - Access Fitness Data with Ease
 
+[![SafeSkill 87/100](https://img.shields.io/badge/SafeSkill-87%2F100_Passes%20with%20Notes-yellow)](https://safeskill.dev/scan/haytam111234-trainingpeaks-mcp)
+
 ## 🚀 Getting Started
 
 Welcome! This guide helps you download and run the TrainingPeaks MCP server on your computer without any technical knowledge. With this application, you can easily query workouts and fitness data using natural language. 
